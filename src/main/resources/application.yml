@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: TodoService
+  datasource:
+    url: jdbc:postgresql://postgres:5432/TODO_SERVICE
+    username: admin
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+server:
+  port: 8080
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka 
+      
+      
+logging:
+  file:
+    name: logs\todo-service.log    
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+          
+info:
+  app:
+    name: ${spring.application.name}
+    description: Todo service application
+    version: 1.0
